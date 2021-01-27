@@ -837,6 +837,14 @@ class Run(tmt.utils.Common):
         self._environment = dict()
         self.remove = self.opt('remove')
 
+    def _use_default_plan(self):
+        """ Prepare metadata tree with only the default plan """
+        default_plan = tmt.utils.yaml_to_dict(tmt.templates.DEFAULT_PLAN)
+        # The default discover method for this case is 'shell'
+        default_plan['/plans/default']['discover']['how'] = 'shell'
+        self.tree = tmt.Tree(tree=fmf.Tree(default_plan))
+        self.debug(f"No metadata found, using the default plan.")
+
     def _save_tree(self, tree):
         """ Save metadata tree, handle the default plan """
         default_plan = tmt.utils.yaml_to_dict(tmt.templates.DEFAULT_PLAN)
@@ -849,10 +857,7 @@ class Run(tmt.utils.Common):
                 self.debug(f"No plan found, adding the default plan.")
         # Create an empty default plan if no fmf metadata found
         except tmt.utils.MetadataError:
-            # The default discover method for this case is 'shell'
-            default_plan['/plans/default']['discover']['how'] = 'shell'
-            self.tree = tmt.Tree(tree=fmf.Tree(default_plan))
-            self.debug(f"No metadata found, using the default plan.")
+            self._use_default_plan()
 
     @property
     def environment(self):
@@ -883,7 +888,12 @@ class Run(tmt.utils.Common):
         # If run id was given and root was not explicitly specified,
         # create a new Tree from the root in run.yaml
         if self._workdir and 'root' in data and not self.opt('root'):
-            self._save_tree(tmt.Tree(data['root']) if data['root'] else None)
+            if data['root']:
+                self._save_tree(tmt.Tree(data['root']))
+            else:
+                # The run was used without any metadata, default plan
+                # was used, load it
+                self._use_default_plan()
 
         # Filter plans by name unless specified on the command line
         plan_options = ['names', 'filters', 'conditions']
