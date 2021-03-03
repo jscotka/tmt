@@ -78,7 +78,7 @@ def export_to_nitrate(test, create, general):
     if general:
         # Remove also all general plans linked to testcase
         for nitrate_plan in nitrate_case.testplans:
-            if is_general_component_plan(nitrate_plan):
+            if nitrate_plan.type.name == "General":
                 nitrate_case.testplans.remove(nitrate_plan)
     # Then add fmf ones
     if test.component:
@@ -248,12 +248,3 @@ def find_general_plan(component):
             "Multiple general test plans found for '{component}' component.")
     # Finally return the one and only General plan
     return found[0]
-
-
-def is_general_component_plan(plan):
-    """
-    Return if plan is general plan type
-    """
-    if plan.type.name == "General":
-        return True
-    return False
