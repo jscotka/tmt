@@ -1,0 +1,17 @@
+/options+:
+  color: false
+  ssh+:
+    -i better_key
+
+
+/plans+:
+    # filter: target=plan & name=.*specific
+    # contains_key: /discovery/how & /execute/how
+    # mark: plan
+    how: minute
+
+/profile+:
+  # or use full path
+  /redhat+:
+    /report+:
+      umb: false

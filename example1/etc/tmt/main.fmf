@@ -1,0 +1,11 @@
+/options:
+  color: true
+  ssh:
+    --super-option
+    --no-interactive
+
+/aliases:
+  centos9: $(bkr distros-list --family CentOSStream9 | grep Name | tail -1 | sed -r 's/.*://')
+  centos8: $(bkr distros-list --family CentOSStream8 | grep Name | tail -1 | sed -r 's/.*://')
+  fedora35: $(bkr distros-list --family Fedora35 | grep Name | tail -1 | sed -r 's/.*://')
+  fedora: ^fedora35

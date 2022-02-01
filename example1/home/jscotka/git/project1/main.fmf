@@ -1,0 +1,7 @@
+/options+:
+  color: yes
+  debug: true
+
+/plans+:
+  /default+:
+    timeout: 10m

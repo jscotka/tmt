@@ -1,0 +1,12 @@
+/provision:
+  how: 1minutetip
+  image: ^/alias/rhel9
+/finish:
+  do-not-destroy: true
+/report:
+  reportportal: true
+  umb: true
+
+
+
+#?^/profiles/redhat
